@@ -6,12 +6,12 @@ import { moderateScale } from 'react-native-size-matters';
 
 
 
-const CustomDropdown = ({data,selectedValue, onChange,label}) => {
+const CustomDropdown = ({ data, selectedValue, onChange, label }) => {
 
   return (
     <View style={styles.container}>
-           <Text style={{marginVertical:10,color:color.primary,fontWeight:'bold',fontSize:moderateScale(15)}}>{label}</Text>
-     
+      <Text style={{ marginVertical: 10, color: color.primary, fontWeight: 'bold', fontSize: moderateScale(15) }}>{label}</Text>
+
       <Dropdown
         style={styles.dropdown}
         data={data}
@@ -29,7 +29,7 @@ const CustomDropdown = ({data,selectedValue, onChange,label}) => {
 
 const styles = StyleSheet.create({
   container: {
-//     padding: 20,
+    //     padding: 20,
   },
   label: {
     fontSize: 16,

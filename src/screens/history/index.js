@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity ,Image,StyleSheet} from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../../components/header";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import { color } from "../../../configs/constants";
 
-const HistoryScreen = ({navigation}) => {
+const HistoryScreen = ({ navigation }) => {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
@@ -33,8 +33,8 @@ const HistoryScreen = ({navigation}) => {
   };
 
   return (
-    <View style={{ flex: 1,backgroundColor:'white' }}>
-      <Header name='Timer History' navigation={navigation}/>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <Header name='Timer History' navigation={navigation} />
 
       {history.length > 0 ? (
         <>
@@ -63,13 +63,14 @@ const HistoryScreen = ({navigation}) => {
           </TouchableOpacity>
         </>
       ) : (
-        <View style={{alignItems:'center'}}>
-         <Image
-                       style={styles.logo}
-                       source={{
-                         uri: 'https://static.vecteezy.com/system/resources/thumbnails/009/300/790/small_2x/3d-rendering-of-time-management-illustration-png.png'}}
-                     />
-        <Text style={{color:color.primary,fontSize:moderateScale(15),fontWeight:'800',top:100}}>No history available</Text>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            style={styles.logo}
+            source={{
+              uri: 'https://static.vecteezy.com/system/resources/thumbnails/009/300/790/small_2x/3d-rendering-of-time-management-illustration-png.png'
+            }}
+          />
+          <Text style={{ color: color.primary, fontSize: moderateScale(15), fontWeight: '800', top: 100 }}>No history available</Text>
         </View>
       )}
     </View>
@@ -79,9 +80,10 @@ const HistoryScreen = ({navigation}) => {
 export default HistoryScreen;
 
 
-const styles = StyleSheet.create({ 
-     logo: {
-     width: verticalScale(300),
-     height: verticalScale(300),
-     top:50
-   },})
+const styles = StyleSheet.create({
+  logo: {
+    width: verticalScale(300),
+    height: verticalScale(300),
+    top: 50
+  },
+})

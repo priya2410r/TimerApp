@@ -16,7 +16,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{
           headerShown: false
         }}>
-                    <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
           <Stack.Screen name="AddTimer" component={AddTimerScreen} />

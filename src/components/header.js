@@ -15,9 +15,6 @@ export default function Header({ navigation, name, isBack }) {
                     <Text style={{ color: color.primary, fontWeight: 'bold', fontSize: moderateScale(18) }}>{name}</Text>
 
                </View>
-               <TouchableOpacity style={{ width: '40%', alignItems: 'flex-end' }} onPress={() => navigation.navigate('History')}>
-                    <Text style={{ color: color.primary, fontWeight: '500', fontSize: moderateScale(15) }}>History</Text>
-               </TouchableOpacity>
 
           </View>
      )

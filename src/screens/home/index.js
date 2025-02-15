@@ -49,12 +49,12 @@ const HomeScreen = ({ navigation }) => {
       console.error("Error clearing timer:", error);
     }
   };
-  
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
       <Header navigation={navigation} name={"Timers"} isBack />
       <View style={{ padding: 20 }}>
-        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between',marginBottom:20 }}>
+        <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
           <Text>Categories</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {data.length > 0 &&
@@ -69,19 +69,19 @@ const HomeScreen = ({ navigation }) => {
 
         </View>
         <FlatList
-        data={categories}
-        keyExtractor={(item) => item.value}
-        renderItem={({ item }) => (
-          <CategoryItem
-            item={item}
-            expandedCategory={expandedCategory}
-            toggleCategory={toggleCategory}
-            data={data}
-            setData={setData}
-            navigation={navigation}
-          />
-        )}      />
-       
+          data={categories}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <CategoryItem
+              item={item}
+              expandedCategory={expandedCategory}
+              toggleCategory={toggleCategory}
+              data={data}
+              setData={setData}
+              navigation={navigation}
+            />
+          )} />
+
 
       </View>
     </View>

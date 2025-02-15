@@ -44,28 +44,7 @@ export default function AddTimerScreen({navigation}) {
     onchangeValue: "",
     isInput: false
   }]
-
-  // const saveTimer = async () => {
-  //    console.log("updatedTimerscall")
-
-  //    if (!timerName || !duration || !selectedValue) return alert('Please fill all fields');
-  //    const newTimer = {
-  //      id: Date.now().toString(),
-  //      name:timerName,
-  //      duration: parseInt(duration),
-  //      category:selectedValue,
-  //      remainingTime: parseInt(duration),
-  //      status: "Paused",
-  //    };
-  //    const updatedTimers = [...timers, newTimer];
-  //    setTimers(updatedTimers);
-  //    console.log(JSON.stringify(updatedTimers),"updatedTimers")
-  //    await AsyncStorage.setItem('timers', JSON.stringify(updatedTimers));
-  //    setTimerName('');
-  //    setDuration('');
-  //    setSelectedValue(null);
-  //    navigation.goBack()
-  //  };
+  
   const saveTimer = async () => {
     console.log("Updated Timers Call");
   

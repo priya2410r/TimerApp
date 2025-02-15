@@ -78,6 +78,7 @@ const HomeScreen = ({ navigation }) => {
             toggleCategory={toggleCategory}
             data={data}
             setData={setData}
+            navigation={navigation}
           />
         )}      />
        

@@ -5,9 +5,9 @@ import Header from "../../components/header";
 import { moderateScale, verticalScale } from "react-native-size-matters";
 import { color } from "../../../configs/constants";
 
-const HistoryScreen = ({ navigation }) => {
+const HistoryScreen = ({ navigation,route }) => {
   const [history, setHistory] = useState([]);
-
+const {type}=route?.params
   useEffect(() => {
     fetchHistory();
   }, []);
@@ -16,7 +16,14 @@ const HistoryScreen = ({ navigation }) => {
     try {
       const storedHistory = await AsyncStorage.getItem("history");
       if (storedHistory) {
-        setHistory(JSON.parse(storedHistory));
+        console.log(storedHistory, "storedHistory");
+        
+        const parsedHistory = JSON.parse(storedHistory);
+        
+        const filteredHistory = parsedHistory.filter((item) => item.category === type);
+        
+        console.log(filteredHistory, "histories");
+        setHistory(filteredHistory);
       }
     } catch (error) {
       console.error("Error fetching history:", error);

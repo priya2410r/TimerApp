@@ -31,6 +31,7 @@ export default function RenderHome({ item, data, setData }) {
         name: timer.name,
         duration: timer.duration,
         completedAt: new Date().toLocaleString(),
+        category:timer.category
       };
 
       const existingHistory = await AsyncStorage.getItem("history");

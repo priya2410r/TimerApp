@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text,TouchableOpacity, FlatList } from 'react-native';
 import AddIcon from '../../images/addIcon';
-import RenderHome from './renderHome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TimerContext } from '../../components/timerContext';
 import Header from '../../components/header';
-import { useIsFocused } from "@react-navigation/native";
 import DeleteIcon from '../../images/deleteIcon';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { color } from '../../../configs/constants';
 import CategoryItem from './category';
 
 
 
 const HomeScreen = ({ navigation }) => {
-  const isFocused = useIsFocused();
   const categories = [
     { label: 'Workout', value: 'workout' },
     { label: 'Study', value: 'study' },
@@ -23,30 +17,42 @@ const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([])
   const [expandedCategory, setExpandedCategory] = useState(null);
 
-  const loadTimers = async () => {
-    const storedTimers = await AsyncStorage.getItem('timers');
-    console.log(storedTimers, "storedTimers")
-    if (storedTimers) {
-      setData(JSON.parse(storedTimers));
+
+  const loadTimersByCategory = async (category) => {
+    try {
+      const key = `timers_${category}`;
+      const storedTimers = await AsyncStorage.getItem(key);
+      if (storedTimers) {
+        console.log(storedTimers, "storedTimers")
+        const parsedTimers = JSON.parse(storedTimers);
+        setData(parsedTimers);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
+      console.error("Error loading timers:", error);
     }
   };
+
 
   const toggleCategory = (value) => {
-    setExpandedCategory(expandedCategory === value ? null : value);
-  };
-
-  useEffect(() => {
-    if (isFocused) {
-      loadTimers();
+    const newCategory = expandedCategory === value ? null : value;
+    setExpandedCategory(newCategory);
+    if (newCategory) {
+      loadTimersByCategory(newCategory);
+    } else {
+      setData([]);
     }
-  }, [isFocused]);
+  };
 
   const deleteTimer = async () => {
     try {
-      await AsyncStorage.removeItem("timers");
-      setData([]); // Clear local state as well
+      const categories = ["study", "workout", "break"];
+      await Promise.all(categories.map(category => AsyncStorage.removeItem(`timers_${category}`)));
+      setData([])
+      console.log("All categories removed successfully.");
     } catch (error) {
-      console.error("Error clearing timer:", error);
+      console.error("Error removing all categories:", error);
     }
   };
 
@@ -89,12 +95,3 @@ const HomeScreen = ({ navigation }) => {
 };
 
 export default HomeScreen;
-
-
-const styles = StyleSheet.create({
-  logo: {
-    width: verticalScale(300),
-    height: verticalScale(300),
-    top: 50
-  },
-})

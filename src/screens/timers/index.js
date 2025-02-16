@@ -14,7 +14,7 @@ export default function AddTimerScreen({ navigation }) {
   const [timerName, setTimerName] = useState("")
   const [duration, setDuration] = useState(5)
   const [selectedValue, setSelectedValue] = useState(null);
-  const { timers, setTimers } = useContext(TimerContext);
+
 
   const categories = [
     { label: 'Workout', value: 'workout' },
@@ -45,6 +45,8 @@ export default function AddTimerScreen({ navigation }) {
     isInput: false
   }]
 
+
+  
   const saveTimer = async () => {
     console.log("Updated Timers Call");
 
@@ -61,17 +63,16 @@ export default function AddTimerScreen({ navigation }) {
       status: "Paused",
     };
 
+
     try {
-      // **Get existing timers from AsyncStorage**
-      const storedTimers = await AsyncStorage.getItem("timers");
+      const key = `timers_${selectedValue}`;
+      const storedTimers = await AsyncStorage.getItem(key);
       const existingTimers = storedTimers ? JSON.parse(storedTimers) : [];
 
-      // **Append new timer**
       const updatedTimers = [...existingTimers, newTimer];
 
-      await AsyncStorage.setItem("timers", JSON.stringify(updatedTimers));
+      await AsyncStorage.setItem(key, JSON.stringify(updatedTimers));
 
-      setTimers(updatedTimers);
 
       setTimerName("");
       setDuration("");
@@ -113,25 +114,3 @@ export default function AddTimerScreen({ navigation }) {
     </View>
   )
 }
-const styles = StyleSheet.create({
-  input: {
-    fontSize: 16,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#1C274C',
-    borderRadius: 8,
-    backgroundColor: 'white',
-  },
-  dropdown: {
-    height: 50,
-    borderColor: '#1C274C',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-  },
-  selectedTextStyle: {
-    color: '#000',  // ✅ Ensure selected text is visible
-    fontSize: 16,
-  },
-})

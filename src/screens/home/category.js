@@ -5,8 +5,6 @@ import RenderHome from './renderHome';
 import HistoryIcon from '../../images/historyIcon';
 
 export default function CategoryItem({ item, expandedCategory, toggleCategory, data, setData, navigation }) {
-     const filteredTimers = data.filter(timer => timer.category === expandedCategory);
-     console.log(filteredTimers, "vasjhcjsg")
 
      return (
           <View style={{ marginBottom: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 8 }}>
@@ -15,15 +13,13 @@ export default function CategoryItem({ item, expandedCategory, toggleCategory, d
                     onPress={() => toggleCategory(item.value)}
                >
                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.label}</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("History", { type: item.value })}>
-                         <HistoryIcon />
-                    </TouchableOpacity>
+                   
                </TouchableOpacity>
                {expandedCategory === item.value && (
                     <View>
-                         {filteredTimers.map((item) => {
+                         {data.map((item) => {
                               return (
-                                   <RenderHome item={item} data={data} setData={setData} />
+                                   <RenderHome item={item} data={data} setData={setData} navigation={navigation}/>
                               )
                          })}
                     </View>

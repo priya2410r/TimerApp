@@ -7,23 +7,20 @@ import { color } from "../../../configs/constants";
 
 const HistoryScreen = ({ navigation, route }) => {
   const [history, setHistory] = useState([]);
-  const { type } = route?.params
+  const { id } = route?.params
+  console.log(id,"historyidss")
   useEffect(() => {
     fetchHistory();
   }, []);
 
   const fetchHistory = async () => {
     try {
-      const storedHistory = await AsyncStorage.getItem("history");
+      const storedHistory = await AsyncStorage.getItem(`history_${id}`);
       if (storedHistory) {
         console.log(storedHistory, "storedHistory");
 
         const parsedHistory = JSON.parse(storedHistory);
-
-        const filteredHistory = parsedHistory.filter((item) => item.category === type);
-
-        console.log(filteredHistory, "histories");
-        setHistory(filteredHistory);
+        setHistory(parsedHistory);
       }
     } catch (error) {
       console.error("Error fetching history:", error);
@@ -32,8 +29,8 @@ const HistoryScreen = ({ navigation, route }) => {
 
   const clearHistory = async () => {
     try {
-      await AsyncStorage.removeItem("history");
-      setHistory([]); // Clear local state as well
+      await AsyncStorage.removeItem(`history_${id}`);
+      setHistory([]); 
     } catch (error) {
       console.error("Error clearing history:", error);
     }

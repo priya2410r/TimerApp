@@ -5,13 +5,13 @@ import { color } from '../../../configs/constants';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProgressBar from "react-native-progress/Bar";
 import { truncateText } from '../../helpers/helper';
-import DownArrowIcon from '../../images/downArrowIcon';
-import UpArrow from '../../images/upArrowIcon';
+import HistoryIcon from '../../images/historyIcon';
 
 
 
-export default function RenderHome({ item, data, setData }) {
-  const [expandedId, setExpandedId] = useState(null);
+export default function RenderHome({ item, data, setData, navigation }) {
+
+
   const [intervalId, setIntervalId] = useState(null);
   const [remainingTime, setRemainingTime] = useState(item.duration);
 
@@ -22,28 +22,30 @@ export default function RenderHome({ item, data, setData }) {
     };
   }, []);
 
-  const toggleExpand = (id) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
-  const saveToHistory = async (timer) => {
+
+
+  const saveToHistory = async (timer, id) => {
+    console.log(id, "timerid")
     try {
       const historyEntry = {
         name: timer.name,
         duration: timer.duration,
         completedAt: new Date().toLocaleString(),
-        category:timer.category
+        category: timer.category
       };
-
-      const existingHistory = await AsyncStorage.getItem("history");
+      const key = `history_${id}`
+      const existingHistory = await AsyncStorage.getItem(key);
       const history = existingHistory ? JSON.parse(existingHistory) : [];
-
+      console.log(history, "historydata")
       history.push(historyEntry);
 
-      await AsyncStorage.setItem("history", JSON.stringify(history));
+
+      await AsyncStorage.setItem(key, JSON.stringify(history));
     } catch (error) {
       console.error("Error saving to history:", error);
     }
   };
+
   const updateTimer = async (id, action) => {
     let updatedTimers = data.map((timer) => {
       if (timer.id === id) {
@@ -54,46 +56,54 @@ export default function RenderHome({ item, data, setData }) {
                 if (prev - 1 <= 0) {
                   clearInterval(interval);
                   setIntervalId(null);
-                  saveToHistory(timer);
-                  Alert.alert(item.name + " Timer completed");
-                  return 0;
+                  saveToHistory(timer, id);
+                  updateTimer(id,'reset')
+                  setRemainingTime(timer.duration);
+                  Alert.alert(timer.name + " Timer completed");
+                  return timer.duration;
                 }
-                return prev - 1; // Decrease remaining time
+                return prev - 1;
               });
             }, 1000);
             setIntervalId(interval);
           }
           return { ...timer, status: "Started" };
         }
+
         if (action === "pause") {
           if (intervalId) clearInterval(intervalId);
           setIntervalId(null);
           return { ...timer, status: "Paused" };
         }
+
         if (action === "reset") {
           if (intervalId) clearInterval(intervalId);
           setIntervalId(null);
-          setRemainingTime(item.duration); // Reset countdown to duration
+          setRemainingTime(timer.duration); // Reset countdown to duration
           return { ...timer, status: "Reset" };
         }
       }
       return timer;
     });
 
-    await AsyncStorage.setItem("timers", JSON.stringify(updatedTimers));
     setData(updatedTimers);
   };
+
+
+
   const progress = remainingTime / item.duration;
+
+
   const getStatusColor = (status) => {
     switch (status) {
       case "Started":
-        return "green"; // Green for running timers
+        return "green";
       case "Paused":
-        return "red"; // Orange for paused timers
+        return "red";
       case "Reset":
-        return "gray"; // Red for reset timers
+        return "gray";
       default:
-        return "gray"; // Default color
+        return "gray";
     }
   };
 
@@ -101,12 +111,12 @@ export default function RenderHome({ item, data, setData }) {
     <View style={styles.itemContainer}>
       <View style={styles.header} >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
           <View style={{ width: "40%" }}>
             <Text style={{ ...styles.title }}>{truncateText(item.name, 5)}</Text>
-
             <Text style={styles.subtitile}>{item.category}</Text>
-
           </View>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={() => updateTimer(item.id, "start")} style={{ ...styles.button, borderColor: 'green' }}>
               <Text style={{ color: 'green', fontWeight: 'bold' }}>S</Text>
@@ -118,23 +128,21 @@ export default function RenderHome({ item, data, setData }) {
               <Text style={{ color: 'gray', fontWeight: 'bold' }}>R</Text>
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* <TouchableOpacity onPress={() => toggleExpand(item.id)} style={{ justifyContent: 'center' }}>
-          {expandedId === item.id ? <UpArrow /> :
-            <DownArrowIcon />
-          }
-        </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => navigation.navigate("History", { id: item.id })} style={{ left: 20 }}>
+            <HistoryIcon />
+          </TouchableOpacity>
+        </View>
       </View>
 
-        <View style={styles.content}>
-          <Text style={{ ...styles.details, color: getStatusColor(item.status) }}>{item.status}</Text>
-          <View style={{ flexDirection: 'row', top: 10, alignItems: 'center' }}>
-            <ProgressBar progress={progress} width={290} height={10} color={getStatusColor(item.status)} style={{ height: 10 }} />
-            <Text style={{ color: color.primary, left: 5 }}>{remainingTime + '/' + item.duration}</Text>
-          </View>
-
+      <View style={styles.content}>
+        <Text style={{ ...styles.details, color: getStatusColor(item.status) }}>{item.status}</Text>
+        <View style={{ flexDirection: 'row', top: 10, alignItems: 'center' }}>
+          <ProgressBar progress={progress} width={290} height={10} color={getStatusColor(item.status)} style={{ height: 10 }} />
+          <Text style={{ color: color.primary, left: 5 }}>{remainingTime + '/' + item.duration}</Text>
         </View>
+
+      </View>
     </View>
   )
 }
@@ -146,7 +154,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     borderRadius: 10,
-    marginHorizontal:10
+    marginHorizontal: 10
   },
   header: {
     paddingVertical: 10,
